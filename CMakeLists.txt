@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.10)
 project(EldenTree)
 
 
-add_executable(EldenTree main.cpp EventHandler.cpp )
+add_executable(EldenTree main.cpp  )
 
-target_include_directories(my_target
+target_include_directories(EldenTree
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/EventHandler
 )
