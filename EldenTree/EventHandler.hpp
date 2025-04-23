@@ -1,26 +1,49 @@
-#pragma once
-#include <unordered_map>
-#include <queue>
-#include <vector>
+#ifndef ELDEN_TREE_HPP
+#define ELDEN_TREE_HPP
+
 #include <string>
-#include "Event.hpp"
+#include <queue>
+#include <unordered_map>
+#include <functional>
+#include <chrono>
 
-class EventHandler {
+// Templated Event struct for flexible payloads
+template<typename Payload>
+struct Event {
+    std::string name;
+    Payload data;
+    std::chrono::steady_clock::time_point timestamp;
+
+    Event(const std::string& n, const Payload& d)
+        : name(n), data(d), timestamp(std::chrono::steady_clock::now()) {}
+};
+
+// Event handler type alias
+template<typename Payload>
+using EventHandler = std::function<void(const Event<Payload>&)>;
+
+// EldenTree event dispatcher class
+template<typename Payload>
+class EldenTree {
 public:
-    // Registers a new god to handle events
-    void registerGod(const std::string& godName);
+    // Register a god with its event handler
+    void registerGod(const std::string& name, EventHandler<Payload> handler);
 
-    // Submit an event for a particular god
-    void submitEvent(const std::string& godName, const Event& event);
+    // Post an event for a specific god
+    void postEvent(const std::string& godName, const Event<Payload>& event);
 
-    // Checks if there are any pending events
-    bool hasPendingEvents() const;
-
-    // Get the next event to process (round-robin scheduling)
-    Event getNextEvent();
+    // Dispatch events fairly to all gods
+    void dispatch();
 
 private:
-    std::unordered_map<std::string, std::queue<Event>> eventQueues;  // Mapping gods to their event queues
-    std::vector<std::string> godOrder;  // Round-robin ordering of gods
-    size_t currentIndex = 0;  // To track which god should be dispatched next
+    // Store events in queues per god
+    std::unordered_map<std::string, std::queue<Event<Payload>>> eventQueues;
+    // Store event handlers per god
+    std::unordered_map<std::string, EventHandler<Payload>> handlers;
+    // Track last dispatch for fairness (round-robin style)
+    std::unordered_map<std::string, size_t> dispatchCounter;
+    size_t totalDispatches = 0; // To implement a simple round-robin fairness
 };
+
+#include "EventHandler.cpp" // Include implementation in header for templated class
+#endif

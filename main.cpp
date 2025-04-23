@@ -2,24 +2,23 @@
 #include "EventHandler.hpp"
 
 int main() {
+    EldenTree<std::string> eldenTree;
 
-    EventHandler handler;
+    // Register gods with their event handlers
+    eldenTree.registerGod("Thor", [](const Event<std::string>& e) {
+        std::cout << "Thor received event: " << e.name << " with data: " << e.data << "\n";
+    });
+    eldenTree.registerGod("Odin", [](const Event<std::string>& e) {
+        std::cout << "Odin received event: " << e.name << " with data: " << e.data << "\n";
+    });
 
+    // Post some events
+    eldenTree.postEvent("Thor", Event<std::string>("Thunder", "Strike!"));
+    eldenTree.postEvent("Odin", Event<std::string>("Wisdom", "Seek knowledge"));
+    eldenTree.postEvent("Thor", Event<std::string>("Lightning", "Boom!"));
 
-    handler.registerGod("Zeus");
-    handler.registerGod("Thor");
-    handler.registerGod("Poseidon");
-
-    handler.submitEvent("Zeus", Event("Thunder Strike", "Strike the enemy"));
-    handler.submitEvent("Thor", Event("Hammer Swing", "Smash the rock"));
-    handler.submitEvent("Poseidon", Event("Tsunami", "Flood the village"));
-
-
-    while (handler.hasPendingEvents()) {
-        Event event = handler.getNextEvent();
-        // Simulate event handling (printing)
-        std::cout << "Handling event: " << event.getName() << std::endl;
-    }
+    // Dispatch events
+    eldenTree.dispatch();
 
     return 0;
 }

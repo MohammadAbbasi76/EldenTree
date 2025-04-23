@@ -1,48 +1,36 @@
+#ifndef ELDEN_TREE_HPP // Include guard for implementation
 #include "EventHandler.hpp"
-#include <iostream>
+#endif
 
-void EventHandler::registerGod(const std::string& godName) {
-    if (eventQueues.find(godName) == eventQueues.end()) {
-        eventQueues[godName] = std::queue<Event>();
-        godOrder.push_back(godName);
-        std::cout << "Registered god: " << godName << std::endl;
-    } else {
-        std::cout << "God " << godName << " is already registered." << std::endl;
-    }
+template<typename Payload>
+void EldenTree<Payload>::registerGod(const std::string& name, EventHandler<Payload> handler) {
+    handlers[name] = handler;
+    eventQueues[name]; // Initialize queue for this god
+    dispatchCounter[name] = 0; // Initialize dispatch counter
 }
 
-void EventHandler::submitEvent(const std::string& godName, const Event& event) {
+template<typename Payload>
+void EldenTree<Payload>::postEvent(const std::string& godName, const Event<Payload>& event) {
     if (eventQueues.find(godName) != eventQueues.end()) {
-        eventQueues[godName].push(event);
-        std::cout << "Submitted event: " << event.getName() << " for god: " << godName << std::endl;
-    } else {
-        std::cout << "God " << godName << " is not registered." << std::endl;
+        eventQueues[godName].push(event); // Add event to the god's queue
     }
 }
 
-bool EventHandler::hasPendingEvents() const {
-    for (const auto& god : godOrder) {
-        if (!eventQueues.at(god).empty()) {
-            return true;  // There are pending events in at least one queue
+template<typename Payload>
+void EldenTree<Payload>::dispatch() {
+    // Simple round-robin fairness: process one event per god per cycle if available
+    for (auto& [godName, queue] : eventQueues) {
+        if (!queue.empty()) {
+            auto& handler = handlers[godName];
+            if (handler) {
+                handler(queue.front()); // Process the event
+                queue.pop(); // Remove it from the queue
+                dispatchCounter[godName]++;
+                totalDispatches++;
+            }
         }
     }
-    return false;  // No pending events
 }
 
-Event EventHandler::getNextEvent() {
-    // Round-robin scheduling
-    while (hasPendingEvents()) {
-        const std::string& currentGod = godOrder[currentIndex];
-        if (!eventQueues[currentGod].empty()) {
-            Event event = eventQueues[currentGod].front();
-            eventQueues[currentGod].pop();
-            std::cout << "Processing event: " << event.getName() << " from god: " << currentGod << std::endl;
-            currentIndex = (currentIndex + 1) % godOrder.size();  // Move to the next god in the round-robin queue
-            return event;
-        }
-
-        currentIndex = (currentIndex + 1) % godOrder.size();  // Move to the next god if current god has no events
-    }
-
-    throw std::runtime_error("No events to process");
-}
+// Explicit template instantiation (optional, for common types)
+// template class EldenTree<std::string>; // Example for string payloads
