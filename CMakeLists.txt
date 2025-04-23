@@ -6,7 +6,7 @@ add_executable(EldenTree main.cpp  EldenTree/Event.cpp EldenTree/EventHandler.cp
 
 target_include_directories(EldenTree
     PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/EventHandler
+        ${CMAKE_CURRENT_SOURCE_DIR}/EldenTree
 )
 
 # Enable compiler warnings (optional but recommended)
