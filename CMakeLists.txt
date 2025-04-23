@@ -9,7 +9,7 @@ target_include_directories(EldenTree
         ${CMAKE_CURRENT_SOURCE_DIR}/EldenTree
 )
 
-# Enable compiler warnings (optional but recommended)
+
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(EldenTree PRIVATE -Wall -Wextra -Wpedantic)
 elseif (MSVC)
