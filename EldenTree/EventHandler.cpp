@@ -31,6 +31,3 @@ void EldenTree<Payload>::dispatch() {
         }
     }
 }
-
-// Explicit template instantiation (optional, for common types)
-// template class EldenTree<std::string>; // Example for string payloads
