@@ -3,7 +3,7 @@
 #include <queue>
 #include <vector>
 #include <string>
-#include "Event.h"
+#include "Event.hpp"
 
 class EventHandler {
 public:

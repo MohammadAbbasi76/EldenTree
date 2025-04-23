@@ -1,4 +1,4 @@
-#include "EventHandler.h"
+#include "EventHandler.hpp"
 #include <iostream>
 
 void EventHandler::registerGod(const std::string& godName) {
