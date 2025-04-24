@@ -5,7 +5,6 @@
 #include <functional>
 #include <iostream>
 #include "Event.hpp"
-#include "EventSender.hpp"
 
 /**
  * @brief The EldenTree class is responsible for managing the gods and their events.
@@ -23,4 +22,22 @@ private:
     std::vector<std::pair<int, Event>> EventQueues;
     static int DispatchCounter;
     size_t TotalDispatches = 0;
+};
+
+class God
+{
+public:
+    God(std::string name) : Name(std::move(name))
+    {
+        GodId++;
+    };
+    template <typename eventType>
+    bool postEvent(const eventType &eventData);
+
+    std::string getName() const { return Name; }
+    int getId() const { return GodId; }
+protected:
+private:
+    std::string Name;
+    static int GodId;
 };
