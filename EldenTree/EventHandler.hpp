@@ -19,8 +19,8 @@ public:
     bool eventReceiver(int sourceId, const Event &event);
 
 private:
-    std::vector<std::pair<int, std::string>> godNames;
-    std::vector<std::pair<int, Event>> eventQueues;
-    static int dispatchCounter;
-    size_t totalDispatches = 0;
+    std::vector<std::pair<int, std::string>> GodNames;
+    std::vector<std::pair<int, Event>> EventQueues;
+    static int DispatchCounter;
+    size_t TotalDispatches = 0;
 };

@@ -4,8 +4,8 @@
 #include <iostream>
 #include <vector>
 
-// dispatchCounter is a static variable that keeps track of the current god's turn to process events.
-int EldenTree::dispatchCounter = 0; 
+// DispatchCounter is a static variable that keeps track of the current god's turn to process events.
+int EldenTree::DispatchCounter = 0; 
 
 /**
 * @brief registerGod is responsible for registering a god with the EldenTree.
@@ -18,7 +18,7 @@ void EldenTree::registerGod(God *god)
         std::cout << "Invalid God pointer." << std::endl;
         return;
     }
-    godNames.push_back({god->getId(), god->getName()});
+    GodNames.push_back({god->getId(), god->getName()});
 }
 
 /**
@@ -35,7 +35,7 @@ bool EldenTree::eventReceiver(int sourceId, const Event &event)
         std::cout << "Invalid event callback." << std::endl;
         return false;
     }
-    eventQueues.push_back({sourceId, event});
+    EventQueues.push_back({sourceId, event});
     return true;
 }
 
@@ -44,39 +44,39 @@ bool EldenTree::eventReceiver(int sourceId, const Event &event)
 * It iterates through the event queues, checking if there are any events to process for each god.
 * If an event is found, it calls the associated action and removes the event from the queue.
 * The function continues until all events have been processed or no new events are found.
-* The dispatchCounter is used to keep track of which god's turn it is to process an event.
+* The DispatchCounter is used to keep track of which god's turn it is to process an event.
 * The function also ensures that each god gets a chance to process events in a fair manner.
 */
 void EldenTree::dispatchEvents() {
-    if (godNames.empty() || eventQueues.empty()) {
+    if (GodNames.empty() || EventQueues.empty()) {
         return;  
     }
-    size_t numGods = godNames.size();
+    size_t numGods = GodNames.size();
     std::vector<bool> godProcessedThisRound(numGods, false);
     bool eventProcessed;
     do {
         eventProcessed = false;
-        int currentGodIndex = dispatchCounter % numGods;
-        int currentGodId = godNames[currentGodIndex].first;
+        int currentGodIndex = DispatchCounter % numGods;
+        int currentGodId = GodNames[currentGodIndex].first;
         if (!godProcessedThisRound[currentGodIndex]) {
-            for (auto it = eventQueues.begin(); it != eventQueues.end(); ++it) {
+            for (auto it = EventQueues.begin(); it != EventQueues.end(); ++it) {
                 if (it->first == currentGodId) {
                     it->second.action();
                     godProcessedThisRound[currentGodIndex] = true;
-                    eventQueues.erase(it);
+                    EventQueues.erase(it);
                     eventProcessed = true;
-                    totalDispatches++;
+                    TotalDispatches++;
                     break;
                 }
             }
         }
-        dispatchCounter++;
-        if (dispatchCounter % numGods == 0) {
+        DispatchCounter++;
+        if (DispatchCounter % numGods == 0) {
             std::fill(godProcessedThisRound.begin(), godProcessedThisRound.end(), false);
             if (!eventProcessed) {
                 break;
             }
         }
-    } while (!eventQueues.empty());
+    } while (!EventQueues.empty());
 }
 
