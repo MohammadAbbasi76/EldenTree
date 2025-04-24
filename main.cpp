@@ -1,24 +1,87 @@
 #include <iostream>
+#include <memory>
 #include "EventHandler.hpp"
 
+// Helper function to create event callbacks for gods
+std::function<void()> createGodCallback(const std::string& godName, const std::string& eventName) {
+    return [godName, eventName]() {
+        std::cout << "God: " << godName << " is executing event: " << eventName << std::endl;
+    };
+}
+
 int main() {
-    EldenTree<std::string> eldenTree;
+    // Create the Elden Tree
+    EldenTree eldenTree;
 
-    // Register gods with their event handlers
-    eldenTree.registerGod("Thor", [](const Event<std::string>& e) {
-        std::cout << "Thor received event: " << e.name << " with data: " << e.data << "\n";
-    });
-    eldenTree.registerGod("Odin", [](const Event<std::string>& e) {
-        std::cout << "Odin received event: " << e.name << " with data: " << e.data << "\n";
-    });
+    // Create 4 gods
+    auto zeusGod = std::make_unique<God>("Zeus");
+    auto poseidonGod = std::make_unique<God>("Poseidon");
+    auto hadesGod = std::make_unique<God>("Hades");
+    auto athenaGod = std::make_unique<God>("Athena");
 
-    // Post some events
-    eldenTree.postEvent("Thor", Event<std::string>("Thunder", "Strike!"));
-    eldenTree.postEvent("Odin", Event<std::string>("Wisdom", "Seek knowledge"));
-    eldenTree.postEvent("Thor", Event<std::string>("Lightning", "Boom!"));
+    // Register gods with the Elden Tree
+    eldenTree.registerGod(zeusGod.get());
+    eldenTree.registerGod(poseidonGod.get());
+    eldenTree.registerGod(hadesGod.get());
+    eldenTree.registerGod(athenaGod.get());
 
-    // Dispatch events
-    eldenTree.dispatch();
+    // Create events for Zeus
+    Event zeusLightning(zeusGod->getId(), createGodCallback("Zeus", "Lightning Strike"));
+    Event zeusThunder(zeusGod->getId(), createGodCallback("Zeus", "Thunder Roar"));
+    Event zeusStorm(zeusGod->getId(), createGodCallback("Zeus", "Storm Creation"));
+    Event zeusRain(zeusGod->getId(), createGodCallback("Zeus", "Rain Control"));
+
+    // Create events for Poseidon
+    Event poseidonWave(poseidonGod->getId(), createGodCallback("Poseidon", "Tidal Wave"));
+    Event poseidonWhirlpool(poseidonGod->getId(), createGodCallback("Poseidon", "Whirlpool"));
+    Event poseidonEarthquake(poseidonGod->getId(), createGodCallback("Poseidon", "Earthquake"));
+    Event poseidonTrident(poseidonGod->getId(), createGodCallback("Poseidon", "Trident Throw"));
+
+    // Create events for Hades
+    Event hadesUndead(hadesGod->getId(), createGodCallback("Hades", "Raise Undead"));
+    Event hadesShadow(hadesGod->getId(), createGodCallback("Hades", "Shadow Control"));
+    Event hadesHellfire(hadesGod->getId(), createGodCallback("Hades", "Hellfire Burst"));
+    Event hadesJudgment(hadesGod->getId(), createGodCallback("Hades", "Soul Judgment"));
+
+    // Create events for Athena
+    Event athenaWisdom(athenaGod->getId(), createGodCallback("Athena", "Wisdom Blessing"));
+    Event athenaStrategy(athenaGod->getId(), createGodCallback("Athena", "Battle Strategy"));
+    Event athenaCraft(athenaGod->getId(), createGodCallback("Athena", "Divine Craft"));
+    Event athenaShield(athenaGod->getId(), createGodCallback("Athena", "Aegis Shield"));
+
+    // Submit events to the Elden Tree
+    std::cout << "Submitting events to the Elden Tree..." << std::endl;
+
+    // Zeus events
+    eldenTree.eventReceiver(zeusGod->getId(), zeusLightning);
+    eldenTree.eventReceiver(zeusGod->getId(), zeusThunder);
+    eldenTree.eventReceiver(zeusGod->getId(), zeusStorm);
+    eldenTree.eventReceiver(zeusGod->getId(), zeusRain);
+
+    // Poseidon events
+    eldenTree.eventReceiver(poseidonGod->getId(), poseidonWave);
+    eldenTree.eventReceiver(poseidonGod->getId(), poseidonWhirlpool);
+    eldenTree.eventReceiver(poseidonGod->getId(), poseidonEarthquake);
+    eldenTree.eventReceiver(poseidonGod->getId(), poseidonTrident);
+
+    // Hades events
+    eldenTree.eventReceiver(hadesGod->getId(), hadesUndead);
+    eldenTree.eventReceiver(hadesGod->getId(), hadesShadow);
+    eldenTree.eventReceiver(hadesGod->getId(), hadesHellfire);
+    eldenTree.eventReceiver(hadesGod->getId(), hadesJudgment);
+
+    // Athena events
+    eldenTree.eventReceiver(athenaGod->getId(), athenaWisdom);
+    eldenTree.eventReceiver(athenaGod->getId(), athenaStrategy);
+    eldenTree.eventReceiver(athenaGod->getId(), athenaCraft);
+    eldenTree.eventReceiver(athenaGod->getId(), athenaShield);
+
+    std::cout << "\nProcessing events in round-robin fashion...\n" << std::endl;
+    
+    // Process all events
+    eldenTree.dispatchEvents();
+
+    std::cout << "\nAll events have been processed." << std::endl;
 
     return 0;
 }
