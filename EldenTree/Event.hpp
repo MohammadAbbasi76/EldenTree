@@ -2,13 +2,11 @@
 #include <functional>
 #include <chrono>
 
-template <typename DataType>
 class Event
 {
 public:
-    using CallbackHandler = std::function<void(const DataType &)>;
 
-    Event(int sourceId, CallbackHandler handler = nullptr)
+    Event(int sourceId, std::function<void()> handler = nullptr)
         : SourceId(sourceId), Callback(std::move(handler)),
           TimeStamp(std::chrono::steady_clock::now()) {}
 
@@ -19,12 +17,11 @@ public:
     }
 
     const int sourceId() const { return SourceId; }
-    const CallbackHandler &getCallback() const { return Callback; }
+    const std::function<void()> &getCallback() const { return Callback; }
     std::chrono::steady_clock::time_point getTimeStamp() const { return TimeStamp; }
 
 private:
     int SourceId;
-    DataType Data;
-    CallbackHandler Callback;
+    std::function<void()> Callback;
     std::chrono::steady_clock::time_point TimeStamp;
 };
