@@ -1,33 +1,82 @@
-#ifndef ELDEN_TREE_HPP // Include guard for implementation
 #include "EventHandler.hpp"
-#endif
+#include "God.hpp"
+#include "Event.hpp"
+#include <iostream>
+#include <vector>
 
-template<typename Payload>
-void EldenTree<Payload>::registerGod(const std::string& name, EventHandler<Payload> handler) {
-    handlers[name] = handler;
-    eventQueues[name]; // Initialize queue for this god
-    dispatchCounter[name] = 0; // Initialize dispatch counter
-}
+// dispatchCounter is a static variable that keeps track of the current god's turn to process events.
+int EldenTree::dispatchCounter = 0; 
 
-template<typename Payload>
-void EldenTree<Payload>::postEvent(const std::string& godName, const Event<Payload>& event) {
-    if (eventQueues.find(godName) != eventQueues.end()) {
-        eventQueues[godName].push(event); // Add event to the god's queue
+/**
+* @brief registerGod is responsible for registering a god with the EldenTree.
+* @param[in] God *god - A pointer to the God object to be registered.
+*/
+void EldenTree::registerGod(God *god)
+{
+    if (god == nullptr)
+    {
+        std::cout << "Invalid God pointer." << std::endl;
+        return;
     }
+    godNames.push_back({god->getId(), god->getName()});
 }
 
-template<typename Payload>
-void EldenTree<Payload>::dispatch() {
-    // Simple round-robin fairness: process one event per god per cycle if available
-    for (auto& [godName, queue] : eventQueues) {
-        if (!queue.empty()) {
-            auto& handler = handlers[godName];
-            if (handler) {
-                handler(queue.front()); // Process the event
-                queue.pop(); // Remove it from the queue
-                dispatchCounter[godName]++;
-                totalDispatches++;
+/**
+* @brief eventReceiver is responsible for receiving events from gods.
+* @param[in] int sourceId - The ID of the god that generated the event.
+* @param[in] const Event &event - The event to be processed.
+* @return bool - Returns true if the event was successfully added to the queue, false otherwise.
+* @note The function also prints an error message if the event callback is invalid.
+*/
+bool EldenTree::eventReceiver(int sourceId, const Event &event)
+{
+    if (event.getCallback() == nullptr)
+    {
+        std::cout << "Invalid event callback." << std::endl;
+        return false;
+    }
+    eventQueues.push_back({sourceId, event});
+    return true;
+}
+
+/**
+* @brief dispatchEvents is responsible for processing events in a round-robin fashion.
+* It iterates through the event queues, checking if there are any events to process for each god.
+* If an event is found, it calls the associated action and removes the event from the queue.
+* The function continues until all events have been processed or no new events are found.
+* The dispatchCounter is used to keep track of which god's turn it is to process an event.
+* The function also ensures that each god gets a chance to process events in a fair manner.
+*/
+void EldenTree::dispatchEvents() {
+    if (godNames.empty() || eventQueues.empty()) {
+        return;  
+    }
+    size_t numGods = godNames.size();
+    std::vector<bool> godProcessedThisRound(numGods, false);
+    bool eventProcessed;
+    do {
+        eventProcessed = false;
+        int currentGodIndex = dispatchCounter % numGods;
+        int currentGodId = godNames[currentGodIndex].first;
+        if (!godProcessedThisRound[currentGodIndex]) {
+            for (auto it = eventQueues.begin(); it != eventQueues.end(); ++it) {
+                if (it->first == currentGodId) {
+                    it->second.action();
+                    godProcessedThisRound[currentGodIndex] = true;
+                    eventQueues.erase(it);
+                    eventProcessed = true;
+                    totalDispatches++;
+                    break;
+                }
             }
         }
-    }
+        dispatchCounter++;
+        if (dispatchCounter % numGods == 0) {
+            std::fill(godProcessedThisRound.begin(), godProcessedThisRound.end(), false);
+            if (!eventProcessed) {
+                break;
+            }
+        }
+    } while (!eventQueues.empty());
 }
+

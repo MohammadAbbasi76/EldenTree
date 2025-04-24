@@ -11,10 +11,11 @@ class EldenTree
 public:
     void registerGod(God *god);
     void dispatchEvents();
-    bool eventReceiver(int sourceId,const Event &event);
+    bool eventReceiver(int sourceId, const Event &event);
 
 private:
+    std::vector<std::pair<int, std::string>> godNames;
     std::vector<std::pair<int, Event>> eventQueues;
-    int dispatchCounter;
+    static int dispatchCounter;
     size_t totalDispatches = 0;
 };
