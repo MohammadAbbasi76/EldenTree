@@ -45,5 +45,7 @@ private:
     size_t totalDispatches = 0; // To implement a simple round-robin fairness
 };
 
+//     std::unordered_map<std::string, std::Event<Payload>> Queues;
+
 #include "EventHandler.cpp" // Include implementation in header for templated class
 #endif

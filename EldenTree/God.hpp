@@ -1,22 +1,17 @@
 #pragma once
 
 #include <string>
-#include <queue>
 #include <unordered_map>
-#include <functional>
-#include <chrono>
-#include"Event.hpp"
+#include "Event.hpp"
 class God
 {
 public:
-    God();
+    God(std::string name);
     ~God();
-    bool PostEvent();
+    bool postEvent();
+    std::string godName(){return Name;}
 
 protected:
-    static int GodId;
-
 private:
-    static bool FirstTimeFlag;
-    std::unordered_map<std::string, std::Event<Payload>> Queues;
+    std::string Name;
 };
