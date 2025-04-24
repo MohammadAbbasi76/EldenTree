@@ -5,23 +5,23 @@
 template<typename DataType>
 class Event {
 public:
-    using Callback = std::function<void(const DataType&)>;
+    using CallbackHandler = std::function<void(const DataType&)>;
 
-    Event(std::string name, DataType data, Callback handler = nullptr)
-        : name(std::move(name)), data(std::move(data)), callback(handler),
-          timestamp(std::chrono::steady_clock::now()) {}
+    Event(int sourceId, CallbackHandler handler = nullptr)
+        : SourceId(sourceId), Callback(std::move(handler)),
+          TimeStamp(std::chrono::steady_clock::now()) {}
 
-    void trigger() const {
-        if (callback) callback(data);
+    void action() const {
+        if (Callback) Callback();
     }
 
-    const std::string& getName() const { return name; }
-    const DataType& getData() const { return data; }
-    std::chrono::steady_clock::time_point getTimestamp() const { return timestamp; }
+    const int sourceId() const { return SourceId; }
+    const CallbackHandler& getCallback() const { return Callback; }
+    std::chrono::steady_clock::time_point getTimeStamp() const { return TimeStamp; }
 
 private:
-    std::string name;
-    DataType data;
-    Callback callback;
-    std::chrono::steady_clock::time_point timestamp;
+    int SourceId;
+    DataType Data;
+    CallbackHandler Callback;
+    std::chrono::steady_clock::time_point TimeStamp;
 };
