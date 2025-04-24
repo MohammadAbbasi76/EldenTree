@@ -24,6 +24,10 @@ private:
     size_t TotalDispatches = 0;
 };
 
+/**
+ * @brief The God class represents a god in the EldenTree system.
+ * Each god has a unique ID and a name. The class provides functionality to post events.
+ * */
 class God
 {
 public:

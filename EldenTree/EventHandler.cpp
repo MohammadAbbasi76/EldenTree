@@ -8,6 +8,7 @@
 int EldenTree::DispatchCounter = 0; 
 // GodId is a static variable that keeps track of the number of gods created.
 int God::GodId = 0;
+
 /**
 * @brief registerGod is responsible for registering a god with the EldenTree.
 * @param[in] God *god - A pointer to the God object to be registered.
