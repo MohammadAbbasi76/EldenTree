@@ -1,5 +1,5 @@
 #include "EventHandler.hpp"
-#include "God.hpp"
+#include "EventSender.hpp"
 #include "Event.hpp"
 #include <iostream>
 #include <vector>

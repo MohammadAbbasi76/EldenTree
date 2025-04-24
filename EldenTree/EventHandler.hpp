@@ -5,7 +5,7 @@
 #include <functional>
 #include <iostream>
 #include "Event.hpp"
-#include "God.hpp"
+#include "EventSender.hpp"
 
 /**
  * @brief The EldenTree class is responsible for managing the gods and their events.
