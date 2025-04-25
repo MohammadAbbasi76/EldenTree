@@ -92,9 +92,6 @@ The C++ implementation provides significant improvements over the previous JavaS
 - Reduced event dispatch latency
 - Improved overall system responsiveness
 
-## License
-MIT
-
 ## Contributing
 We welcome contributions from both mortals and immortals. Please read our contributing guidelines before submitting pull requests.
 
