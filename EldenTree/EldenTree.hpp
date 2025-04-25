@@ -4,6 +4,7 @@
 #include <vector>
 #include <functional>
 #include <iostream>
+#include <memory>
 #include "Event.hpp"
 
 /**
@@ -15,11 +16,11 @@ class EldenTree
 public:
     void registerGod(God *god);
     void dispatchEvents();
-    bool eventReceiver(int sourceId, const Event &event);
+    static bool eventReceiver(int sourceId, const Event &event);
 
 private:
     std::vector<std::pair<int, std::string>> GodNames;
-    std::vector<std::pair<int, Event>> EventQueues;
+    static std::vector<std::pair<int, Event>> EventQueues;
     static int DispatchCounter;
     size_t TotalDispatches = 0;
 };
