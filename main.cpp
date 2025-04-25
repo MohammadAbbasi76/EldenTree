@@ -28,7 +28,7 @@ int main() {
     Event zeusRain(zeus.getId(), createGodCallback("Zeus", "Rain Control"));
 
     Event poseidonWave(poseidon.getId(), createGodCallback("Poseidon", "Tidal Wave"));
-    Event poseidonWhirlpool(poseidon.getId(), createGodCallback("Poseidon", "Whirlpool"));
+    Event poseidonWhirlpool(poseidon.getId(), createGodCallback("Poseidon", "floods"));
     Event poseidonEarthquake(poseidon.getId(), createGodCallback("Poseidon", "Earthquake"));
     Event poseidonTrident(poseidon.getId(), createGodCallback("Poseidon", "Trident Throw"));
 
