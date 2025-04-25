@@ -1,5 +1,4 @@
 #include "EventHandler.hpp"
-#include "EventSender.hpp"
 #include "Event.hpp"
 #include <iostream>
 #include <vector>
@@ -82,3 +81,19 @@ void EldenTree::dispatchEvents() {
     } while (!EventQueues.empty());
 }
 
+/**
+ * @brief postEvent is responsible for posting an event to the EldenTree.
+ * @param[in] const Event &eventData - The event to be posted.
+ * @return bool - Returns true if the event was successfully posted, false otherwise.
+ * @note The function checks if the event callback is valid before posting the event.
+ */
+bool God::postEvent(const Event &eventData)
+{
+    if (eventData.getCallback() == nullptr)
+    {
+        std::cout << "Invalid event callback." << std::endl;
+        return false;
+    }
+    EldenTree::eventReceiver(GodId, eventData);
+    return true;
+}

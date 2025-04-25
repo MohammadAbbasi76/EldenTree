@@ -35,8 +35,7 @@ public:
     {
         GodId++;
     };
-    template <typename eventType>
-    bool postEvent(const eventType &eventData);
+    bool postEvent(const Event &eventData);
     std::string getName() const { return Name; }
     int getId() const { return GodId; }
 
