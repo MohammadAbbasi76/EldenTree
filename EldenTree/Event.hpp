@@ -16,8 +16,8 @@ public:
         {
             Callback();
             auto now = std::chrono::steady_clock::now();
-            auto duration =(now - TimeStamp);
-            std::cout << "Event action executed after " << duration.count() << " microseconds." << std::endl;   
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(now - TimeStamp);
+            std::cout << "\tEvent executed\t" << duration.count() << " microseconds after creation" << std::endl;   
         }
 
     }

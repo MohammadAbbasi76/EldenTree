@@ -72,7 +72,6 @@ void EldenTree::dispatchEvents()
                     godProcessedThisRound[currentGodIndex] = true;
                     EventQueues.erase(it);
                     eventProcessed = true;
-                    TotalDispatches++;
                     break;
                 }
             }
@@ -87,6 +86,7 @@ void EldenTree::dispatchEvents()
             }
         }
     } while (!EventQueues.empty());
+    std::cout << "Dispatch counter: " << DispatchCounter << std::endl;
 }
 
 /**
