@@ -18,7 +18,7 @@ void EldenTree::registerGod(God *god)
         std::cout << "Invalid God pointer." << std::endl;
         return;
     }
-    GodNames.push_back({god->getId(), god->getName()});
+    RegisterGods.push_back({god->getId(), god->getName()});
 }
 
 /**
@@ -49,19 +49,19 @@ bool EldenTree::eventReceiver(int sourceId, const Event &event)
  */
 void EldenTree::dispatchEvents()
 {
-    if (GodNames.empty() || EventQueues.empty())
+    if (RegisterGods.empty() || EventQueues.empty())
     {
         std::cout << "No gods or events to process." << std::endl;
         return;
     }
-    size_t numGods = GodNames.size();
+    size_t numGods = RegisterGods.size();
     std::vector<bool> godProcessedThisRound(numGods, false);
     bool eventProcessed;
     do
     {
         eventProcessed = false;
         int currentGodIndex = DispatchCounter % numGods;
-        int currentGodId = GodNames[currentGodIndex].first;
+        int currentGodId = RegisterGods[currentGodIndex].first;
         if (!godProcessedThisRound[currentGodIndex])
         {
             for (auto it = EventQueues.begin(); it != EventQueues.end(); ++it)
