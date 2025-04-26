@@ -77,11 +77,6 @@ void EldenTree::dispatchEvents()
     }
     std::vector<int> presentGodsList;
     presentGods(&presentGodsList);
-    if (presentGodsList.empty())
-    {
-        std::cout << "No present gods to process events for." << std::endl;
-        return;
-    }
     size_t numPresentGods = presentGodsList.size();
     std::vector<bool> godProcessedThisRound(numPresentGods, false);
     bool eventProcessed;
