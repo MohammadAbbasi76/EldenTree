@@ -40,7 +40,9 @@ bool EldenTree::eventReceiver(int sourceId, const Event &event)
 }
 
 /**
- * 
+ * @brief presentGods is responsible for identifying gods that are currently present in the event queue.
+ * @param[out] std::vector<int> *presentGodsList - A pointer to a vector that will be populated with the IDs of present gods.
+ * @note The function checks the event queue to determine which gods have events and adds their IDs to the provided list.
  */
 void EldenTree::presentGods(std::vector<int> *presentGodsList)
 {
