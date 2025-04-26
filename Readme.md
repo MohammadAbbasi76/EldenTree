@@ -4,7 +4,7 @@
 The Elden Tree is a high-performance event handling system designed for the land of ancient gods. It serves as a central hub for managing and dispatching divine events between different realms. This C++ implementation replaces a previous JavaScript version to provide better performance and reduced event handling delays.
 
 ## The Story
-In the mystical realm of ancient gods, the Elden Tree stands as a sacred nexus for divine communication. It acts as a central nervous system, facilitating the exchange of events between different divine domains. The previous implementation by a junior demi-god programmer used JavaScript, which resulted in unacceptable delays in event processing, causing divine displeasure. This C++ rewrite aims to restore harmony by providing swift and efficient event handling worthy of the gods.
+In the land of ancient gods, the Elden Tree is known as the center base; It is responsible for being a safe place for each god’s events, and it will carefully transform the events between corresponding lands. But, unfortunately, the previous demi-god programmer who developed the Elden Tree’s event handler, was a junior and used Js as the base language and it makes the gods angry about the delays between receiving each event. So, please rewrite and redesign the Elden Tree’s event handler in C++ ”to be fast”
 
 ## Key Features
 - Fast event dispatching system
