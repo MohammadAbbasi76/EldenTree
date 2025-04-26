@@ -40,28 +40,56 @@ bool EldenTree::eventReceiver(int sourceId, const Event &event)
 }
 
 /**
+ * 
+ */
+void EldenTree::presentGods(std::vector<int> *presentGodsList)
+{
+    for (const auto &god : RegisterGods)
+    {
+        bool isGodPresent = false;
+        for (const auto &event : EventQueues)
+        {
+            if (event.first == god.first)
+            {
+                isGodPresent = true;
+                break;
+            }
+        }
+        if (isGodPresent)
+        {
+            if (std::find(presentGodsList->begin(), presentGodsList->end(), god.first) == presentGodsList->end())
+                presentGodsList->push_back(god.first);
+        }
+    }
+}
+/**
  * @brief dispatchEvents is responsible for processing events in a round-robin fashion.
- * It iterates through the event queues, checking if there are any events to process for each god.
+ * It iterates through the event queues, checking if there are any events to process for each present god.
  * If an event is found, it calls the associated action and removes the event from the queue.
- * The function continues until all events have been processed or no new events are found.
- * The DispatchCounter is used to keep track of which god's turn it is to process an event.
- * The function also ensures that each god gets a chance to process events in a fair manner.
+ * The function ensures that each present god gets a chance to process events in a fair manner.
  */
 void EldenTree::dispatchEvents()
 {
-    if (RegisterGods.empty() || EventQueues.empty())
+    if (EventQueues.empty())
     {
-        std::cout << "No gods or events to process." << std::endl;
+        std::cout << "No events to process." << std::endl;
         return;
     }
-    size_t numGods = RegisterGods.size();
-    std::vector<bool> godProcessedThisRound(numGods, false);
+    std::vector<int> presentGodsList;
+    presentGods(&presentGodsList);
+    if (presentGodsList.empty())
+    {
+        std::cout << "No present gods to process events for." << std::endl;
+        return;
+    }
+    size_t numPresentGods = presentGodsList.size();
+    std::vector<bool> godProcessedThisRound(numPresentGods, false);
     bool eventProcessed;
     do
     {
         eventProcessed = false;
-        int currentGodIndex = DispatchCounter % numGods;
-        int currentGodId = RegisterGods[currentGodIndex].first;
+        int currentGodIndex = DispatchCounter % numPresentGods;
+        int currentGodId = presentGodsList[currentGodIndex];
         if (!godProcessedThisRound[currentGodIndex])
         {
             for (auto it = EventQueues.begin(); it != EventQueues.end(); ++it)
@@ -77,7 +105,7 @@ void EldenTree::dispatchEvents()
             }
         }
         DispatchCounter++;
-        if (DispatchCounter % numGods == 0)
+        if (DispatchCounter % numPresentGods == 0)
         {
             std::fill(godProcessedThisRound.begin(), godProcessedThisRound.end(), false);
             if (!eventProcessed)

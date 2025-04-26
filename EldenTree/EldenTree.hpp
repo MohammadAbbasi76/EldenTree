@@ -42,7 +42,7 @@ public:
     static bool eventReceiver(int sourceId, const Event &event);
 
 private:
-    int presentGods();
+    void presentGods(std::vector<int> *presentGodsList);
     std::vector<std::pair<int, std::string>> RegisterGods;
     static std::vector<std::pair<int, Event>> EventQueues;
     static int DispatchCounter;
